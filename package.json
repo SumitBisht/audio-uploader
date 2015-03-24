@@ -1,0 +1,34 @@
+{
+  "name": "audioRecorder",
+  "preferGlobal": true,
+  "private": false,
+  "version": "1.0.0",
+  "author": {
+    "name": "Sumit Bisht",
+    "email": "sumitbisht1987@gmail.com"
+  },
+  "description": "audio recorder that allows a user to uploade audio from microphone to the website",
+  "scripts": {
+    "start": "node server"
+  },
+  "main": "./index",
+  "keywords": [
+    "webrtc",
+    "javascript",
+    "RecordRTC",
+    "Node.js",
+    "audio-recording",
+    "wav"
+  ],
+  "engines": {
+    "node": ">=0.6"
+  },
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "express": "~3.0.x",
+    "jade": "~1.3.0",
+    "node-static": "~0.7.3",
+    "fibers": "~1.0.1",
+    "socket.io": "0.9.*"
+  }
+}
