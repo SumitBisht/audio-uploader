@@ -10,7 +10,7 @@ var stopRecordingAudio = document.getElementById('stop-recording-audio');
 var cameraPreview = document.getElementById('camera-preview');
 var writingStatus = document.getElementById('firstrecord');
 var waitArea = document.getElementById('wait');
-var storedPreviews = {}, storedAudio = {};
+var storedPreviews = [], storedAudio = {};
 //var server = 'https://localhost:8443/';
 var server = 'http://localhost:8888/';
 /* Connects to server via sockets */
@@ -269,20 +269,35 @@ socket.on('Preview', function(fileName) {
 socket.on('uploaded-audio', function(name) {
     if (waitArea == null) {
         console.log('Uploaded on server');
-        document.getElementById('result_audio').innerHTML += '<audio controls source src="' + server + 'uploads/' + name + '" >Not Supported</audio> <br />';
     } else {
         waitArea.innerHTML = '';
         storedAudio[name] = true;
-        document.getElementById('result_audio').innerHTML += '<audio controls source src="' + server + 'uploads/' + name + '" >Not Supported</audio> <br />';
-        document.getElementById('result_audio').innerHTML += '<button style="background-color: darkgray; color: white; padding: 5px 20px; border-radius: 10px;" onclick=deleteme("'+ name + '")>Delete From Server</button>';
+        storedPreviews.push(name);
         reGenerateAudioPreviewTable();
     }
 });
 
 function deleteme(fname){
+    var index = storedPreviews.indexOf(fname);
+    if(index == -1){
+        console.error('Specified file to delete not found in client state');
+        return;
+    }
+    var fobj = {};
+    fobj.name = fname;
+    storedPreviews.splice(index, 1);
+    reGenerateAudioPreviewTable();
     console.log('Delete the file named: '+fname);
-    socket.emit('delete-audio', fname);
+    socket.emit('delete-audio', fobj);
 }
+socket.on('deleted-audio', function(file){
+    alert('Audio comment with name: '+file.name+' deleted from server');
+});
 
 function reGenerateAudioPreviewTable(){
+    document.getElementById('result_audio').innerHTML = '';
+    storedPreviews.forEach(function(file){        
+        document.getElementById('result_audio').innerHTML += '<audio controls source src="' + server + 'uploads/' + file + '" >Not Supported</audio> ';
+        document.getElementById('result_audio').innerHTML += '<button style="background-color: darkgray; color: white; padding: 5px 20px; border-radius: 10px;" onclick=deleteme("'+ file + '")>Delete From Server</button> <br />';
+    });
 }
