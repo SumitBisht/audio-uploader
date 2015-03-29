@@ -274,16 +274,15 @@ socket.on('uploaded-audio', function(name) {
         waitArea.innerHTML = '';
         storedAudio[name] = true;
         document.getElementById('result_audio').innerHTML += '<audio controls source src="' + server + 'uploads/' + name + '" >Not Supported</audio> <br />';
+        document.getElementById('result_audio').innerHTML += '<button style="background-color: darkgray; color: white; padding: 5px 20px; border-radius: 10px;" onclick=deleteme("'+ name + '")>Delete From Server</button>';
         reGenerateAudioPreviewTable();
     }
 });
 
-function reGenerateAudioPreviewTable(){
-    // var resultTable = document.getElementById('audio-previews');
-    // var newRow = resultTable.insertRow(resultTable.rows.length);
-    // var fileName = newRow.insertCell(0);
-    // var video = newRow.insertCell(1);
+function deleteme(fname){
+    console.log('Delete the file named: '+fname);
+    socket.emit('delete-audio', fname);
+}
 
-    // fileName.innerHTML = '<a href="' + server + resultData + '"">'+resultData+'</a>';
-    // video.innerHTML = '<video controls> <source src="' + server + resultData + '" type="video/webm" /></video>';
+function reGenerateAudioPreviewTable(){
 }
