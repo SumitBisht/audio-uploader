@@ -1,0 +1,11 @@
+div
+  p enter the following details to get started
+  form(id='pageform' action='/processed' method='post')
+    p enter a page name
+      input(type='text' name='page_name')
+    p upload an audio file
+      input(type='text' name='file')
+    input(type='submit')
+
+  if entered != undefined
+    =entered

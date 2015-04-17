@@ -29,6 +29,16 @@ app.get('/audio_upload', function(req, res) {
     });
 });
 
+app.get('/admin', function(req, res){
+    res.render('admin');
+});
+app.post('/processed', function(req, res){
+    var pageName = req.body.page_name;
+    var audioFile = req.body.file;
+    console.log('page name: '+pageName+' and file: '+audioFile);
+    res.redirect('/admin?name='+pageName+'&file='+audioFile);//,{ entered:req.body.page_name})
+});
+
 app.get('/uploads', function(req, res) {
     var file_names = [];
     var files = fs.readdirSync(path.join(__dirname, 'public', 'uploads'));
