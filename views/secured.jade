@@ -1,0 +1,16 @@
+html
+  head
+    title Secured Audio Player
+    script(src="js/audio_player.js")
+  body
+    div(id="outer_page")
+      p You can record audio comments that will get played after the song completes.
+      div(id="innerpage")
+        p music file follows
+        audio(src="/audio/music.mp3" autoplay controls)
+        hr
+        p audio comments:
+        div(id="audio_comments")
+        div(id="recording_controls")
+          button(id="start_recording_audio") Start Comment
+          button(id="stop_recording_audio" disabled) Stop Comment

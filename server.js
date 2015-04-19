@@ -7,12 +7,14 @@ var fs = require('fs'),
     Fiber = require('fibers'),
     //Q = require("q"),
     config = require('./config'),
+    session = require('express-session'),
     http = require('http').createServer(app).listen(config.HTTP_PORT);
 
 
 app.set('view engine', 'jade');
 app.locals.basedir = path.join(__dirname, 'views');
 app.use(express.logger());
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.bodyParser()); //{uploadDir: path.join(__dirname, 'public', 'uploads')} )
@@ -29,14 +31,28 @@ app.get('/audio_upload', function(req, res) {
     });
 });
 
-app.get('/admin', function(req, res){
-    res.render('admin');
+app.get('/login', function(req, res){
+    res.render('login');
 });
 app.post('/processed', function(req, res){
-    var pageName = req.body.page_name;
-    var audioFile = req.body.file;
-    console.log('page name: '+pageName+' and file: '+audioFile);
-    res.redirect('/admin?name='+pageName+'&file='+audioFile);//,{ entered:req.body.page_name})
+    var userName = req.body.userName.trim();
+    var passWord = req.body.passWord.trim();
+
+    console.log(userName+passWord);
+    console.log(config.UNAME+config.UPASS);
+    if(userName === config.UNAME && passWord === config.UPASS){
+        req.session.logged_in=true;
+        res.redirect('/secure');
+    }else{
+        req.session.logged_in=false;
+        res.render('login');
+    }
+});
+app.get('/secure', function(req, res){
+    if(req.session.logged_in==true)
+        res.render('secured');
+    else
+        res.redirect('/login');
 });
 
 app.get('/uploads', function(req, res) {
